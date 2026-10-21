@@ -1,0 +1,10 @@
+# 多 Agent 语音播报系统
+fastapi>=0.110
+uvicorn[standard]>=0.27
+httpx>=0.27
+PyYAML>=6.0
+pydantic>=2.5
+openai>=1.30
+trafilatura>=1.8
+markdown-it-py>=3.0
+langgraph>=0.2

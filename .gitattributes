@@ -1,0 +1,7 @@
+# 统一换行符，避免跨平台 diff 噪音
+* text=auto eol=lf
+
+# 二进制产物不要做换行转换
+*.png binary
+*.wav binary
+*.jpg binary

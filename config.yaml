@@ -1,0 +1,103 @@
+# =============================================================================
+# 多 Agent 语音播报系统 · 编排配置
+#
+# 纪律（算分点）：
+#   1. 本文件只允许出现环境变量的【名字】（xxx_api_key_env），绝不允许出现密钥明文。
+#   2. 换服务商只改这里与 .env，不改代码。
+#   3. ${VAR} 形式会在加载时从环境变量（含 .env）替换。
+# =============================================================================
+
+app:
+  name: voice-researcher
+  # 生成的音频落盘目录（同时通过 /files/ 暴露给前端）
+  output_dir: ./data/outputs
+  # 单个音频上限 8MB：防止上游返回超大文件把进程拖垮
+  max_audio_bytes: 8388608
+  # 单轮任务总超时
+  run_timeout_s: 240
+
+llm:
+  # OpenAI 兼容端点（DeepSeek / 千问都可，改 .env 即可覆盖）
+  base_url: ${LLM_BASE_URL:-https://api.deepseek.com}
+  model: ${LLM_MODEL:-deepseek-chat}
+  api_key_env: DEEPSEEK_API_KEY
+  temperature: 0.4
+  timeout_s: 120
+
+# ---------------------------------------------------------------------------
+# 工具：每种协议一个 client 类，这里只做装配
+# ---------------------------------------------------------------------------
+tools:
+
+  # ---- 联网搜索（博查协议）----
+  web_search:
+    protocol: bocha
+    enabled: true
+    base_url: https://api.bochaai.com/v1/web-search
+    api_key_env: BOCHA_API_KEY
+    auth_header: Authorization
+    auth_scheme: Bearer
+    timeout_s: 25
+    count: 8
+
+  # ---- 网页正文抽取（本地解析，无需网络鉴权）----
+  fetch_page:
+    protocol: readability
+    enabled: true
+    timeout_s: 25
+    max_bytes: 2000000
+
+  # ---- ★ 本组新增协议：千问 TTS ----
+  # 不是 OpenAI 的 /v1/audio/speech：请求体是 {model, input:{text,voice,language_type}}，
+  # 响应是 JSON，音频为 24 小时有效的 OSS 链接（不是二进制流）。
+  qwen_tts:
+    protocol: qwen_tts
+    enabled: true
+    base_url: https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation
+    api_key_env: DASHSCOPE_API_KEY
+    auth_header: Authorization
+    auth_scheme: Bearer
+    timeout_s: 120
+    model: qwen3-tts-flash
+    voice: Cherry
+    language_type: Chinese
+    # 单次合成文本上限（字），超长会截断，避免一次请求过大
+    max_text_chars: 1200
+
+# ---------------------------------------------------------------------------
+# Agent：每个 worker 用哪些工具、什么人设
+# ---------------------------------------------------------------------------
+agents:
+
+  supervisor:
+    # 调度中心最多转几轮，防止死循环
+    max_turns: 10
+
+  researcher:
+    persona: 资深行业研究员
+    tools: [web_search, fetch_page]
+    # 一次任务最多发几次搜索、打开几个页面
+    max_searches: 3
+    max_pages: 2
+
+  writer:
+    persona: 播客撰稿人
+    tools: []
+    # 口播稿字数上限（太长会让 TTS 变慢、音频过大）
+    max_chars: 900
+
+  voice:
+    persona: 配音导演
+    tools: [qwen_tts]
+
+# ---------------------------------------------------------------------------
+# 图：编排模式
+#   supervisor —— 中心调度节点按状态分派给专职 worker（本组选用）
+#   network    —— worker 之间自由转交
+#   pipeline   —— 固定顺序，无调度节点
+# ---------------------------------------------------------------------------
+graph:
+  mode: supervisor
+  max_turns: 10
+  # 是否在调度时让 LLM 参与决策（false = 纯规则，演示更稳定）
+  llm_routing: false

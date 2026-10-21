@@ -1,0 +1,18 @@
+# 密钥与虚拟环境
+.env
+.venv/
+__pycache__/
+*.pyc
+
+# 运行产物
+data/outputs/*
+!data/outputs/.gitkeep
+logs/*
+!logs/.gitkeep
+
+# 本机工具缓存（不属于提交内容）
+.workbuddy/
+
+# 系统
+.DS_Store
+Thumbs.db
