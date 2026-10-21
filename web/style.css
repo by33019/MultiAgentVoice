@@ -1,0 +1,236 @@
+/* 轻量样式：够用即可，不做框架依赖 */
+:root {
+  --bg: #f7f8fa;
+  --panel: #ffffff;
+  --border: #e6e8eb;
+  --text: #1f2328;
+  --text-soft: #57606a;
+  --text-mute: #8b949e;
+  --accent: #2f6fed;
+  --accent-soft: #eef3fe;
+  --ok: #1a7f37;
+  --ok-soft: #e9f7ee;
+  --warn: #9a6700;
+  --warn-soft: #fff8e5;
+  --err: #cf222e;
+  --err-soft: #ffeef0;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+.app {
+  max-width: 940px;
+  margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+
+/* 顶栏 */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  flex: none;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo { font-size: 22px; }
+.brand h1 { font-size: 16px; margin: 0; font-weight: 600; }
+.sub { margin: 0; font-size: 12px; color: var(--text-mute); }
+
+.meta { display: flex; align-items: center; gap: 8px; }
+
+.pill {
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+.pill.ok { background: var(--ok-soft); border-color: #c6ecd2; color: var(--ok); }
+.pill.err { background: var(--err-soft); border-color: #ffc9cf; color: var(--err); }
+
+.btn {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.btn:hover { background: var(--bg); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { background: #2560d4; }
+.btn.ghost { background: transparent; }
+.btn.tiny { padding: 2px 8px; font-size: 11px; }
+
+/* 链路标识 */
+.tracebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: var(--accent-soft);
+  border-bottom: 1px solid #dbe6fd;
+  font-size: 12px;
+  flex: none;
+}
+.trace-label { color: var(--text-mute); }
+.tracebar code {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+  background: #fff;
+  border: 1px solid #dbe6fd;
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+
+/* 对话区 */
+.chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty {
+  margin: auto;
+  text-align: center;
+  max-width: 520px;
+  color: var(--text-soft);
+}
+.empty h2 { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.empty p { font-size: 13px; margin-top: 0; }
+.samples { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
+.chip {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12.5px;
+  cursor: pointer;
+  color: var(--text-soft);
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+.msg { display: flex; gap: 10px; }
+.msg.user { justify-content: flex-end; }
+.bubble {
+  max-width: 88%;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+.msg.user .bubble { background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+.msg.bot .bubble {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+  width: 100%;
+}
+.avatar { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; background: var(--accent-soft); }
+
+/* 运行状态 */
+.stage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-soft);
+  font-size: 13px;
+}
+.spinner {
+  width: 12px; height: 12px;
+  border: 2px solid #d0d7de; border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 回答 */
+.answer :first-child { margin-top: 0; }
+.answer h1, .answer h2, .answer h3 { font-size: 15px; margin: 16px 0 8px; }
+.answer h2 { border-left: 3px solid var(--accent); padding-left: 8px; }
+.answer p, .answer li { font-size: 14px; }
+.answer ul { padding-left: 20px; }
+.answer code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  background: #eef1f4;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.answer a { color: var(--accent); word-break: break-all; }
+
+/* 产物 */
+.artifacts { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.artifact {
+  border: 1px solid #c6ecd2;
+  background: var(--ok-soft);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.artifact .at-title { font-size: 12.5px; color: var(--ok); margin-bottom: 6px; }
+.artifact audio { width: 100%; }
+.artifact img { max-width: 100%; border-radius: 8px; }
+
+/* 日志 */
+details.events { margin-top: 12px; font-size: 12px; color: var(--text-soft); }
+details.events summary { cursor: pointer; color: var(--text-mute); }
+.events table { width: 100%; border-collapse: collapse; margin-top: 6px; font-family: var(--mono); font-size: 11.5px; }
+.events td { padding: 2px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.events td:first-child { color: var(--text-mute); white-space: nowrap; }
+
+/* 错误 */
+.error-box {
+  background: var(--err-soft);
+  border: 1px solid #ffc9cf;
+  color: var(--err);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+/* 输入 */
+.composer {
+  flex: none;
+  display: flex;
+  gap: 10px;
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--border);
+  align-items: flex-end;
+}
+.composer textarea {
+  flex: 1;
+  resize: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 14px;
+  max-height: 140px;
+  outline: none;
+}
+.composer textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }

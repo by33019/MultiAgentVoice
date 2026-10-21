@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>多 Agent 语音播报</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">🎙</span>
+        <div>
+          <h1>多 Agent 语音播报</h1>
+          <p class="sub">调研 → 撰稿 → 配音 · supervisor 编排</p>
+        </div>
+      </div>
+      <div class="meta">
+        <span id="health-pill" class="pill">连接中…</span>
+        <button id="reset-btn" class="btn ghost" title="清空当前会话">新会话</button>
+      </div>
+    </header>
+
+    <!-- 链路标识 -->
+    <div class="tracebar" id="tracebar" hidden>
+      <span class="trace-label">trace_id</span>
+      <code id="trace-id">—</code>
+      <button id="copy-trace" class="btn tiny">复制</button>
+      <span class="trace-label">session_id</span>
+      <code id="session-id">—</code>
+    </div>
+
+    <!-- 对话区 -->
+    <main class="chat" id="chat">
+      <div class="empty" id="empty">
+        <h2>输入一个主题，让三个 Agent 合作做一期播报</h2>
+        <p>调研 Agent 会先联网检索并打开原文，撰稿 Agent 改写成口播稿，配音 Agent 用千问 TTS 合成音频。</p>
+        <div class="samples">
+          <button class="chip" data-q="向量数据库的现状与趋势">向量数据库的现状与趋势</button>
+          <button class="chip" data-q="大模型 RAG 的典型流程与常见坑">大模型 RAG 的典型流程与常见坑</button>
+          <button class="chip" data-q="2026 年 AI Agent 的发展方向">2026 年 AI Agent 的发展方向</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- 输入区 -->
+    <footer class="composer">
+      <textarea id="input" rows="1" placeholder="输入主题，例如：向量数据库的现状与趋势（Enter 发送，Shift+Enter 换行）"></textarea>
+      <button id="send" class="btn primary">发送</button>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
